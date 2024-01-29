@@ -1,0 +1,82 @@
+def calculate_vacation_score(age, travel_buddy, income, flag_country, last_vacation):
+    """ This function decides if a user should go on a vacation.
+    takes input :
+    age(int) : how old the user is?
+    travel_buddy(yes/no): travelling alone?
+    income(int): annual income
+    flag_country(yes/no): yes if travelling within the country
+    last_vacation(int) : how many years since last vacation?
+    retuns a score between 0 and 100 
+    >>> calculate_vacation_score(15, "No", 0, "yes", 5)
+    100
+    >>> calculate_vacation_score(25, "No", 70000, "yes", 5)
+    100
+    >>> calculate_vacation_score(60, "Yes", 10000, "No", 0)
+    30
+    >>> calculate_vacation_score(65, "Yes", 10000, "No", 0)
+    0
+    >>> calculate_vacation_score(45, "Yes", 200000, "No", 5)
+    100
+    """
+    score = 0
+    age_flag = False
+    salary_flag = True
+   
+    if 0 <= age <= 17 :
+        score += 10
+        age_flag = True
+    elif (18 <= age <= 25) or (41 <= age <= 60) :
+        score += 20
+    elif 26 <= age <= 40 :
+        score += 30
+    elif  age > 60:
+        score += 25
+        age_flag = True
+
+    if (travel_buddy.lower() == "yes" and age_flag) :
+	    score -= 30 
+    elif (travel_buddy.lower() == "yes" and not age_flag):
+        score += 15
+    else: 
+        score += 30
+    
+    if income < 30000:
+         score += 0
+    elif 30000<= income < 100000:
+         score += income//1000
+    else:
+         score += 100
+         salary_flag = False
+
+    if flag_country.lower() == "no" and salary_flag:
+        score -= 30
+    else:
+        score += 30
+
+    if last_vacation <= 1 :
+        score += 25
+    elif last_vacation <= 3 :
+        score += 50
+    else:
+        score += 75
+
+    if score < 0 :
+        score = 0
+    elif score > 100:
+        score = 100
+
+    return score
+
+# This code runs the doctests to see if they pass/fail
+import doctest
+doctest.run_docstring_examples(calculate_vacation_score, globals(),
+    verbose=True, name="calculate_vacation_score")
+
+age = int(input("How old are you? (Enter rounded to the neareast year) "))
+travel_buddy = input("Do you plan to travle alone? (Enter yes or no) ")
+income = int(input("How much do you earn annualy? "))
+flag_country = input("Do you plan to travel within your country? (Enter yes or no) ") 
+last_vacation = int(input("How many years since your last vacation? (Enter values in years) "))
+
+score = calculate_vacation_score(age, travel_buddy, income, flag_country, last_vacation)
+print(score)
